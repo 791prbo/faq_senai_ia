@@ -1,6 +1,10 @@
 import streamlit as st
 from g4f.client import Client # Importando o cliente unificado de IA
 
+# FUNÇÃO PEDAGÓGICA: Estimador de Tokens (Regra de mercado: 1 token ≈ 4 caracteres)
+def calcular_tokens(texto):
+    return max(1, round(len(texto) / 4))
+
 # Configuração da página web
 st.set_page_config(page_title="AI Chatbot Pro", page_icon="🧠")
 st.title("🧠 Meu Chatbot com IA Generativa")
@@ -15,6 +19,25 @@ if "mensagens" not in st.session_state:
         # Mensagem de sistema que dita o comportamento inicial da IA
         {"role": "system", "content": "Você é um assistente virtual prestativo e bem-humorado criado em sala de aula."}
     ]
+# ==============================================================================
+# 📊 BARRA LATERAL: Monitor de Consumo de Tokens (A Novidade aqui)
+# ==============================================================================
+with st.sidebar:
+    st.header("📊 Monitor de Infraestrutura")
+    st.write("Tamanho do 'cérebro' enviado para a API nesta rodada:")
+    
+    # Calcular o total de tokens atualmente acumulados no histórico
+    total_tokens_prompt = sum(calcular_tokens(msg["content"]) for msg in st.session_state.mensagens)
+    
+    # Exibe um card visual elegante com a métrica
+    st.metric(
+        label="Tokens de Entrada (Contexto Atual)", 
+        value=f"{total_tokens_prompt} tokens",
+        delta=f"+{calcular_tokens(st.session_state.mensagens[-1]['content'])} do último turno" if len(st.session_state.mensagens) > 1 else None
+    )
+    
+    st.divider()
+    st.caption("⚠️ Nota técnica: Como o histórico é reenviado a cada mensagem, o custo de processamento cresce de forma cumulativa.")        
 
 # Renderizar as mensagens anteriores na tela (ignorando a mensagem oculta do 'system')
 for msg in st.session_state.mensagens:
