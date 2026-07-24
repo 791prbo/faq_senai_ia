@@ -1,3 +1,4 @@
+# ... aluno cria o app_faq.py com o dicionário em Python ...
 import streamlit as st
 
 # Configuração da página web
