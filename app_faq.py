@@ -1,9 +1,20 @@
+import tiktoken
 import streamlit as st
 from g4f.client import Client # Importando o cliente unificado de IA
 
-# FUNÇÃO PEDAGÓGICA: Estimador de Tokens (Regra de mercado: 1 token ≈ 4 caracteres)
-def calcular_tokens(texto):
-    return max(1, round(len(texto) / 4))
+def calcular_tokens_oficial(texto, modelo="gpt-4o-mini"):
+    try:
+        # Puxa o codificador oficial da OpenAI configurado para aquele modelo
+        codificador = tiktoken.encoding_for_model(modelo)
+    except KeyError:
+        # Caso o modelo seja genérico, usa o padrão do GPT-4
+        codificador = tiktoken.get_encoding("cl100k_base")
+        
+    # O método .encode() transforma o texto puro em uma lista de números (IDs dos tokens)
+    lista_de_tokens = codificador.encode(texto)
+    
+    # Retornamos o tamanho dessa lista (que é a quantidade exata de tokens)
+    return len(lista_de_tokens)
 
 # Configuração da página web
 st.set_page_config(page_title="AI Chatbot Pro", page_icon="🧠")
@@ -27,13 +38,13 @@ with st.sidebar:
     st.write("Tamanho do 'cérebro' enviado para a API nesta rodada:")
     
     # Calcular o total de tokens atualmente acumulados no histórico
-    total_tokens_prompt = sum(calcular_tokens(msg["content"]) for msg in st.session_state.mensagens)
+    total_tokens_prompt = sum(calcular_tokens_oficial(msg["content"]) for msg in st.session_state.mensagens)
     
     # Exibe um card visual elegante com a métrica
     st.metric(
         label="Tokens de Entrada (Contexto Atual)", 
         value=f"{total_tokens_prompt} tokens",
-        delta=f"+{calcular_tokens(st.session_state.mensagens[-1]['content'])} do último turno" if len(st.session_state.mensagens) > 1 else None
+        delta=f"+{calcular_tokens_oficial(st.session_state.mensagens[-1]['content'])} do último turno" if len(st.session_state.mensagens) > 1 else None
     )
     
     st.divider()
