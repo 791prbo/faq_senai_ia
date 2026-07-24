@@ -1,5 +1,20 @@
+import tiktoken
 import streamlit as st
 from g4f.client import Client # Importando o cliente unificado de IA
+
+def calcular_tokens_oficial(texto, modelo="gpt-4o-mini"):
+    try:
+        # Puxa o codificador oficial da OpenAI configurado para aquele modelo
+        codificador = tiktoken.encoding_for_model(modelo)
+    except KeyError:
+        # Caso o modelo seja genérico, usa o padrão do GPT-4
+        codificador = tiktoken.get_encoding("cl100k_base")
+        
+    # O método .encode() transforma o texto puro em uma lista de números (IDs dos tokens)
+    lista_de_tokens = codificador.encode(texto)
+    
+    # Retornamos o tamanho dessa lista (que é a quantidade exata de tokens)
+    return len(lista_de_tokens)
 
 # Configuração da página web
 st.set_page_config(page_title="AI Chatbot Pro", page_icon="🧠")
@@ -15,6 +30,25 @@ if "mensagens" not in st.session_state:
         # Mensagem de sistema que dita o comportamento inicial da IA
         {"role": "system", "content": "Você é um assistente virtual prestativo e bem-humorado criado em sala de aula."}
     ]
+# ==============================================================================
+# 📊 BARRA LATERAL: Monitor de Consumo de Tokens (A Novidade aqui)
+# ==============================================================================
+with st.sidebar:
+    st.header("📊 Monitor de Infraestrutura")
+    st.write("Tamanho do 'cérebro' enviado para a API nesta rodada:")
+    
+    # Calcular o total de tokens atualmente acumulados no histórico
+    total_tokens_prompt = sum(calcular_tokens_oficial(msg["content"]) for msg in st.session_state.mensagens)
+    
+    # Exibe um card visual elegante com a métrica
+    st.metric(
+        label="Tokens de Entrada (Contexto Atual)", 
+        value=f"{total_tokens_prompt} tokens",
+        delta=f"+{calcular_tokens_oficial(st.session_state.mensagens[-1]['content'])} do último turno" if len(st.session_state.mensagens) > 1 else None
+    )
+    
+    st.divider()
+    st.caption("⚠️ Nota técnica: Como o histórico é reenviado a cada mensagem, o custo de processamento cresce de forma cumulativa.")        
 
 # Renderizar as mensagens anteriores na tela (ignorando a mensagem oculta do 'system')
 for msg in st.session_state.mensagens:
