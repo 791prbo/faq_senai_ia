@@ -123,3 +123,25 @@ git pull origin main
 # Delete a branch antiga localmente se não for mais usá-la
 git branch -d feature/login-usuario
 ```
+
+# API Key
+
+1. acesse: <https://console.groq.com>
+2. Clique no ícone 🔑 (Get API Key )
+3. Crie uma API Key com o nome de Chatbot SENAI
+4. Na Raiz do projeto, crie:
+```
+faq/
+├── app_faq.py
+└── .streamlit/
+    └── secrets.toml
+```
+4.1. Guardar a chave no secrets.toml
+```
+GEMINI_API_KEY = "sua_chave_aqui_cole_o_codigo"
+GROQ_API_KEY = "gsk_sua_chave_groq_aqui"
+```
+4.2. 📌 Atenção: Adicionar o secrets dentro do .gitignore
+
+
+
