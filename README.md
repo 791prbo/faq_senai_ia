@@ -123,3 +123,24 @@ git pull origin main
 # Delete a branch antiga localmente se não for mais usá-la
 git branch -d feature/login-usuario
 ```
+
+# Gemini API Key
+
+1. acesse: <https://aistudio.google.com>
+2. Clique no ícone 🔑 (Get API Key )
+3. Crie um projeto com o nome de Chatbot SENAI
+4. Na Raiz do projeto, crie:
+```
+faq/
+├── app_faq.py
+└── .streamlit/
+    └── secrets.toml
+```
+4.1. Guardar a chave no secrets.toml
+```
+GEMINI_API_KEY = "sua_chave_aqui_cole_o_codigo"
+```
+4.2. 📌 Atenção: Adicionar o secrets dentro do .gitignore
+
+
+
