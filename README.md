@@ -124,11 +124,11 @@ git pull origin main
 git branch -d feature/login-usuario
 ```
 
-# Gemini API Key
+# API Key
 
-1. acesse: <https://aistudio.google.com>
+1. acesse: <https://console.groq.com>
 2. Clique no ícone 🔑 (Get API Key )
-3. Crie um projeto com o nome de Chatbot SENAI
+3. Crie uma API Key com o nome de Chatbot SENAI
 4. Na Raiz do projeto, crie:
 ```
 faq/
@@ -139,6 +139,7 @@ faq/
 4.1. Guardar a chave no secrets.toml
 ```
 GEMINI_API_KEY = "sua_chave_aqui_cole_o_codigo"
+GROQ_API_KEY = "gsk_sua_chave_groq_aqui"
 ```
 4.2. 📌 Atenção: Adicionar o secrets dentro do .gitignore
 
