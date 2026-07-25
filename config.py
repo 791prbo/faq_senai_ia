@@ -20,3 +20,20 @@ Você é o Consultor Virtual Oficial de Cursos do SENAI. Sua única função é 
 # Configurações do modelo
 MODELO_DEFAULT_G4F = "gpt-4o-mini"
 MODELO_DEFAULT_GROQ = "llama-3.3-70b-versatile"
+
+# --- TEMPLATES PARA DOWNLOAD ---
+TEMPLATE_TXT = """==================================================
+BASE DE DADOS OFICIAL - CURSOS SENAI
+==================================================
+
+### CURSO 1: [NOME DO CURSO]
+- Categoria: [Ex: Técnico / Qualificação]
+- Carga Horária: [Ex: 1200 horas]
+- Modalidade: [Ex: Presencial / EAD]
+- Investimento: [Ex: Gratuito / 10x de R$ 250,00]
+- Pré-requisitos: [Ex: 16 anos, Ensino Médio Cursando]
+
+#### Conteúdo Programático:
+* Módulo 1: [Nome] - [Resumo]
+* Módulo 2: [Nome] - [Resumo]
+"""
